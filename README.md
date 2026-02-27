@@ -2,6 +2,10 @@
 
 A modern AI-style pitch simulator built with React and Vite. Practice your pitch, get simulated AI-powered feedback, and improve instantly.
 
+## 🌐 Live Demo
+
+Deployed live on: **https://gde-front.vercel.app/**
+
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-7-646CFF?logo=vite&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green)
