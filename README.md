@@ -1,6 +1,6 @@
 # 🎙 Pitch Analyzer
 
-A modern AI-style pitch simulator built with React and Vite. Practice your pitch, get simulated AI-powered feedback, and improve instantly.
+A modern AI-style pitch simulator built with React and Vite. Practice your pitch, get **real AI-powered feedback** using Azure OpenAI services, and improve instantly.
 
 ## 🌐 Live Demo
 
@@ -14,10 +14,11 @@ Deployed live on: **https://gde-front.vercel.app/**
 
 ## ✨ Features
 
-- **5-step simulation flow** — Welcome → Settings → Listening → Analyzing → Results
+- **5-step simulation flow** — Welcome → Settings → Listening → Transcription → Analysis
 - **Configurable sessions** — Goal, formality, situation, location, and time constraint
-- **Simulated recording** — Animated microphone with live timer and soundwave bars
-- **AI-style analysis** — Randomized scores, metrics, and feedback paragraphs
+- **Real microphone recording** — Capture audio directly in the browser
+- **Azure Speech-to-Text** — Converts your pitch audio into text
+- **Azure GPT-4o Analysis** — Provides detailed feedback on confidence, clarity, engagement, and more
 - **Score history** — Track results across multiple attempts
 - **Light / Dark mode** — Toggle with persistence via localStorage
 - **Smooth animations** — Page transitions and micro-interactions via Framer Motion
@@ -30,7 +31,7 @@ Deployed live on: **https://gde-front.vercel.app/**
 ```
 src/
 ├── components/       # Reusable UI components (Card, Button, Badge, ProgressBar, etc.)
-├── pages/            # Route pages (Welcome, Settings, Listening, Analyzing, Results)
+├── pages/            # Route pages (Welcome, Settings, Listening, Transcription, Analysis)
 ├── styles/           # Global CSS and design tokens
 ├── App.jsx           # Router setup and app state
 └── main.jsx          # Entry point
@@ -80,6 +81,7 @@ The app will be running at **http://localhost:5173**
 | React Router DOM   | Client-side routing        |
 | Framer Motion      | Animations & transitions   |
 | Lucide React       | Icons                      |
+| Azure OpenAI       | Speech-to-text and GPT-4o analysis |
 
 ---
 
@@ -89,9 +91,9 @@ The app will be running at **http://localhost:5173**
 | ------------ | ------------ | ------------------------------------------------ |
 | Welcome      | `/`          | Landing page with app introduction                |
 | Settings     | `/settings`  | Configure pitch goal, formality, situation, etc.  |
-| Listening    | `/listening` | Simulated microphone recording with timer         |
-| Analyzing    | `/analyzing` | AI processing animation with progress bar         |
-| Results      | `/results`   | Randomized score, metrics, and AI feedback        |
+| Listening    | `/listening` | Record your pitch using the microphone            |
+| Transcription| `/transcription` | Converts audio to text using Azure Speech-to-Text |
+| Analysis     | `/analysis`  | AI-powered feedback on your pitch                 |
 
 ---
 
