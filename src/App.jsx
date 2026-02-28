@@ -5,6 +5,7 @@ import ThemeToggle from './components/ThemeToggle';
 import Welcome from './pages/Welcome';
 import SettingsPage from './pages/Settings';
 import Listening from './pages/Listening';
+import Transcription from './pages/Transcription';
 import Analyzing from './pages/Analyzing';
 import Results from './pages/Results';
 import PageTransition from './components/PageTransition';
@@ -26,6 +27,9 @@ export default function App() {
 
   /* ---- Settings state ---- */
   const [settings, setSettings] = useState(null);
+
+  /* ---- Audio recording state ---- */
+  const [audioFile, setAudioFile] = useState(null);
 
   return (
     <>
@@ -53,7 +57,15 @@ export default function App() {
             path="/listening"
             element={
               <PageTransition>
-                <Listening />
+                <Listening onRecordingComplete={setAudioFile} />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="/transcription"
+            element={
+              <PageTransition>
+                <Transcription audioFile={audioFile} />
               </PageTransition>
             }
           />

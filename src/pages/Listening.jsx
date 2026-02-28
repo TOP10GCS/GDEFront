@@ -6,17 +6,68 @@ import Card from '../components/Card';
 import Button from '../components/Button';
 import './Listening.css';
 
-export default function Listening() {
+export default function Listening({ onRecordingComplete }) {
   const navigate = useNavigate();
   const [seconds, setSeconds] = useState(0);
+  const [isRecording, setIsRecording] = useState(false);
   const timerRef = useRef(null);
+  const mediaRecorderRef = useRef(null);
+  const chunksRef = useRef([]);
 
+  /* Start recording on mount */
   useEffect(() => {
-    timerRef.current = setInterval(() => {
-      setSeconds((s) => s + 1);
-    }, 1000);
+    let stream;
+
+    const startRecording = async () => {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+        const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
+          ? 'audio/webm;codecs=opus'
+          : 'audio/webm';
+
+        const recorder = new MediaRecorder(stream, { mimeType });
+        mediaRecorderRef.current = recorder;
+        chunksRef.current = [];
+
+        recorder.ondataavailable = (e) => {
+          if (e.data.size > 0) chunksRef.current.push(e.data);
+        };
+
+        recorder.onstop = () => {
+          const blob = new Blob(chunksRef.current, { type: mimeType });
+          const ext = mimeType.includes('webm') ? 'webm' : 'mp4';
+          const file = new File([blob], `pitch-recording.${ext}`, { type: mimeType });
+
+          /* Pass audio file to parent state */
+          onRecordingComplete(file);
+
+          /* Stop all microphone tracks */
+          stream.getTracks().forEach((t) => t.stop());
+
+          navigate('/transcription');
+        };
+
+        recorder.start(250); // collect data every 250ms
+        setIsRecording(true);
+      } catch (err) {
+        console.error('Microphone access denied:', err);
+      }
+    };
+
+    startRecording();
+
+    return () => {
+      if (stream) stream.getTracks().forEach((t) => t.stop());
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  /* Timer */
+  useEffect(() => {
+    if (!isRecording) return;
+    timerRef.current = setInterval(() => setSeconds((s) => s + 1), 1000);
     return () => clearInterval(timerRef.current);
-  }, []);
+  }, [isRecording]);
 
   const formatTime = (s) => {
     const m = Math.floor(s / 60);
@@ -26,7 +77,9 @@ export default function Listening() {
 
   const handleStop = () => {
     clearInterval(timerRef.current);
-    navigate('/analyzing');
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+      mediaRecorderRef.current.stop();
+    }
   };
 
   return (
