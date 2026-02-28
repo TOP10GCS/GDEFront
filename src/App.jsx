@@ -6,8 +6,7 @@ import Welcome from './pages/Welcome';
 import SettingsPage from './pages/Settings';
 import Listening from './pages/Listening';
 import Transcription from './pages/Transcription';
-import Analyzing from './pages/Analyzing';
-import Results from './pages/Results';
+import AIAnalysis from './pages/AIAnalysis';
 import PageTransition from './components/PageTransition';
 
 export default function App() {
@@ -30,6 +29,9 @@ export default function App() {
 
   /* ---- Audio recording state ---- */
   const [audioFile, setAudioFile] = useState(null);
+
+  /* ---- Transcription text state ---- */
+  const [transcriptionText, setTranscriptionText] = useState('');
 
   return (
     <>
@@ -65,23 +67,21 @@ export default function App() {
             path="/transcription"
             element={
               <PageTransition>
-                <Transcription audioFile={audioFile} />
+                <Transcription
+                  audioFile={audioFile}
+                  onTranscriptionComplete={setTranscriptionText}
+                />
               </PageTransition>
             }
           />
           <Route
-            path="/analyzing"
+            path="/analysis"
             element={
               <PageTransition>
-                <Analyzing />
-              </PageTransition>
-            }
-          />
-          <Route
-            path="/results"
-            element={
-              <PageTransition>
-                <Results settings={settings} />
+                <AIAnalysis
+                  transcriptionText={transcriptionText}
+                  settings={settings}
+                />
               </PageTransition>
             }
           />

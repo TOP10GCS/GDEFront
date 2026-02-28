@@ -9,7 +9,7 @@ import './Transcription.css';
 const API_ENDPOINT =
   'https://karaa-mm6145sg-eastus2.cognitiveservices.azure.com/openai/deployments/gpt-4o-beszedtoszoveg/audio/transcriptions?api-version=2025-03-01-preview';
 
-export default function Transcription({ audioFile }) {
+export default function Transcription({ audioFile, onTranscriptionComplete }) {
   const navigate = useNavigate();
   const [status, setStatus] = useState('loading'); // loading | success | error
   const [transcript, setTranscript] = useState('');
@@ -24,6 +24,7 @@ export default function Transcription({ audioFile }) {
       const formData = new FormData();
       formData.append('file', file);
       formData.append('model', 'gpt-4o-beszedtoszoveg');
+      formData.append('chunking_strategy', 'auto');
 
       const res = await fetch(API_ENDPOINT, {
         method: 'POST',
@@ -39,7 +40,9 @@ export default function Transcription({ audioFile }) {
       }
 
       const data = await res.json();
-      setTranscript(data.text || JSON.stringify(data, null, 2));
+      const text = data.text || JSON.stringify(data, null, 2);
+      setTranscript(text);
+      if (onTranscriptionComplete) onTranscriptionComplete(text);
       setStatus('success');
     } catch (err) {
       console.error('Transcription failed:', err);
@@ -114,7 +117,7 @@ export default function Transcription({ audioFile }) {
               variant="primary"
               size="lg"
               icon={<ArrowRight size={18} />}
-              onClick={() => navigate('/results')}
+              onClick={() => navigate('/analysis')}
             >
               Continue to Analysis
             </Button>
